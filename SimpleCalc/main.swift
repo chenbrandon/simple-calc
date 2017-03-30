@@ -1,3 +1,4 @@
+#!/usr/bin/swift
 //
 //  main.swift
 //  SimpleCalc
@@ -22,8 +23,6 @@ for argument in CommandLine.arguments {
         args.append(argument)
     }
 }
-print("method is" + method)
-print(args)
 
 if(method == "+") {
     print(Double(args[0])! + Double(args[1])! )
