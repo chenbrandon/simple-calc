@@ -69,10 +69,16 @@ func avg(a: [String]) {
     print(sum / c)
 }
 
-
+let operations: [String] = ["+", "-", "/", "%", "*"]
 // Start here
 if(method != "") { // User invoke script with command arguments, ex: $ ./main.swift + -39 3.49
-    if(method == "+") {
+    if(args.count == 0) {
+        print("You did not enter any numbers")
+    } else if(operations.contains(method) && args.count != 2) {
+        print("The operation you selected only accepts two numbers")
+    } else if(method == "fact" && args.count != 1) {
+        print("Fact can only accept one number")
+    } else if(method == "+") {
         add(a: Double(args[0])!, b: Double(args[1])! )
     } else if(method == "-") {
         sub(a: Double(args[0])!, b: Double(args[1])! )
@@ -102,42 +108,48 @@ if(method != "") { // User invoke script with command arguments, ex: $ ./main.sw
     }
 } else { // user did not use command line arguments, prompt user
     print("Enter an expression separated by returns")
-    let num1: String = readLine(strippingNewline: true)!
-    let res1: String = readLine(strippingNewline: true)!
+    let num1: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
+    let res1: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
     if(res1 == "fact") {
         print(fact(n: Double(num1)!))
     } else if(res1 == "count") {
         print(1)
     } else if(res1 == "avg") {
-        print(Double(num1)!)
-    }else if(res1 == "+" || res1 == "-" || res1 == "/" || res1 == "%" || res1 == "*") {
-        let num2: String = readLine(strippingNewline: true)!
+        avg(a: [num1])
+    } else if(operations.contains(res1)) {
+        let num2: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
         if(res1 == "+") {
             add(a: Double(num1)!, b: Double(num2)!)
         } else if(res1 == "-") {
             sub(a: Double(num1)!, b: Double(num2)!)
             
-        }else if(res1 == "/") {
+        } else if(res1 == "/") {
             div(a: Double(num1)!, b: Double(num2)!)
             
-        }else if(res1 == "%") {
+        } else if(res1 == "%") {
             mod(a: Double(num1)!, b: Double(num2)!)
             
-        }else if(res1 == "*") {
+        } else if(res1 == "*") {
             mult(a: Double(num1)!, b: Double(num2)!)
         }
     } else { // keep interrogating until operand
         var nums: [String] = [num1, res1]
         var next: String = ""
         repeat {
-            next = readLine(strippingNewline: true)!
-            if(next != "count" && next != "avg") {
+            next = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
+            if(operations.contains(next)) {
+                print("You can only select this operation in between two numbers")
+                break
+            } else if(next == "fact") {
+                print("fact only accepts one number")
+                break
+            } else if(next != "count" && next != "avg") {
                 nums.append(next)
             }
         } while(next != "count" && next != "avg")
         if(next == "count") {
             count(a: nums)
-        } else {
+        } else if(next == "avg") {
             avg(a: nums)
         }
     }
