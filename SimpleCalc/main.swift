@@ -9,15 +9,6 @@
 
 import Foundation
 
-
-/* Handles command line arguments
- * Examples call:
- * $ ./main.swift fact 13
- * $ ./main.swift + 4 -2.39
- * $ ./main.swift % -49.8 -3.98
- * $ ./main.swift avg 99 99 99 99 -99 49 3 3.49
- * $ ./main.swift count 99 99 99 99 -99 49 3 3.49
- */
 var args:[String] = []
 var filename = "" // the filename is the first argument
 var method = ""   // the method name should be the second argument
@@ -32,7 +23,7 @@ for argument in CommandLine.arguments { // the remaining arguments
 }
 
 // Calculator functions
-func add(a: Double, b: Double) {
+func add(a: Double, b: Double){
     print(a + b)
 }
 func sub(a: Double, b: Double) {
@@ -47,9 +38,6 @@ func div(a: Double, b: Double) {
 func mod(a: Double, b: Double) {
     print(a.truncatingRemainder(dividingBy: b))
 }
-func count(a: [Any]) {
-    print(a.count)
-}
 func fact(n: Double) -> Double {
     if(n < 0) {
         return -1
@@ -60,13 +48,30 @@ func fact(n: Double) -> Double {
     return n * fact(n: n-1);
 }
 func avg(a: [String]) {
+    avg2(a: a, b: true)
+}
+func count(a: [String]) {
+    avg2(a: a, b: false)
+}
+
+// a: [String]  The array to find the average count of
+// b: Bool      Whether the average or count is printed
+func avg2(a: [String], b: Bool) {
     let c = Double(a.count)
     var sum: Double = 0;
     for n in a {
-        
-        sum += Double(n.trimmingCharacters(in: .whitespaces))!
+        if let x = Double(n) {
+            sum += x
+        } else {
+            print("Entered an invalid number inside of expression")
+            return
+        }
     }
-    print(sum / c)
+    if(b) {
+        print(sum / c)
+    } else {
+        print(c)
+    }
 }
 
 let operations: [String] = ["+", "-", "/", "%", "*"]
@@ -78,22 +83,32 @@ if(method != "") { // User invoke script with command arguments, ex: $ ./main.sw
         print("The operation you selected only accepts two numbers")
     } else if(method == "fact" && args.count != 1) {
         print("Fact can only accept one number")
-    } else if(method == "+") {
-        add(a: Double(args[0])!, b: Double(args[1])! )
-    } else if(method == "-") {
-        sub(a: Double(args[0])!, b: Double(args[1])! )
-    } else if(method == "*") {
-        mult(a: Double(args[0])!, b: Double(args[1])! )
-    } else if(method == "/") {
-        div(a: Double(args[0])!, b: Double(args[1])! )
-    } else if(method == "%") {
-        mod(a: Double(args[0])!, b: Double(args[1])! )
+    } else if(operations.contains(method)) {
+        if let a = Double(args[0]), let b = Double(args[1]) {
+            if(method == "+") {
+                add(a: a, b: b)
+            } else if(method == "-") {
+                sub(a: a, b: b)
+            } else if(method == "*") {
+                mult(a: a, b: b)
+            } else if(method == "/") {
+                div(a: a, b: b)
+            } else if(method == "%") {
+                mod(a: a, b: b)
+            }
+        } else {
+            print("Entered invalid values")
+        }
     } else if(method == "count") {
         count(a: args)
     } else if(method == "avg") {
         avg(a: args)
     } else if(method == "fact") {
-        print(fact(n: Double(args[0])!))
+        if let a = Double(args[0]) {
+            print(fact(n: a))
+        } else {
+            print("Entered invalid values")
+        }
     } else { // Offer help text to client
         print("It looks like you are trying to call this program with command line arguments")
         print("This feature requires that you enter in the arguments in a specific format")
@@ -111,26 +126,35 @@ if(method != "") { // User invoke script with command arguments, ex: $ ./main.sw
     let num1: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
     let res1: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
     if(res1 == "fact") {
-        print(fact(n: Double(num1)!))
+        if let a = Double(num1) {
+            print(fact(n: a))
+        } else {
+            print("Invalid number")
+        }
     } else if(res1 == "count") {
         print(1)
     } else if(res1 == "avg") {
-        avg(a: [num1])
+        if let a = Double(num1) {
+            print(a)
+        } else {
+            print("Invalid number")
+        }
     } else if(operations.contains(res1)) {
         let num2: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
-        if(res1 == "+") {
-            add(a: Double(num1)!, b: Double(num2)!)
-        } else if(res1 == "-") {
-            sub(a: Double(num1)!, b: Double(num2)!)
-            
-        } else if(res1 == "/") {
-            div(a: Double(num1)!, b: Double(num2)!)
-            
-        } else if(res1 == "%") {
-            mod(a: Double(num1)!, b: Double(num2)!)
-            
-        } else if(res1 == "*") {
-            mult(a: Double(num1)!, b: Double(num2)!)
+        if let a = Double(num1), let b = Double(num2) {
+            if(res1 == "+") {
+                add(a: a, b: a)
+            } else if(res1 == "-") {
+                sub(a: a, b: b)
+            } else if(res1 == "/") {
+                div(a: a, b: b)
+            } else if(res1 == "%") {
+                mod(a: a, b: b)
+            } else if(res1 == "*") {
+                mult(a: a, b: b)
+            }
+        } else {
+            print("Invalid expression entered")
         }
     } else { // keep interrogating until operand
         var nums: [String] = [num1, res1]
