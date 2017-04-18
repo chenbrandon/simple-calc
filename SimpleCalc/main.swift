@@ -143,7 +143,7 @@ if(method != "") { // User invoke script with command arguments, ex: $ ./main.sw
         let num2: String = readLine(strippingNewline: true)!.trimmingCharacters(in: .whitespaces)
         if let a = Double(num1), let b = Double(num2) {
             if(res1 == "+") {
-                add(a: a, b: a)
+                add(a: a, b: b)
             } else if(res1 == "-") {
                 sub(a: a, b: b)
             } else if(res1 == "/") {
